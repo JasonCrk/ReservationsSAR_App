@@ -1,0 +1,39 @@
+<section class="w-[86vw] sm:w-[60vw] md:w-[50vw] lg:w-[34vw] xl:w-[500px]">
+  <h1 class="text-2xl font-bold text-center mb-1">INICIAR SESIÓN</h1>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="flex flex-col gap-2 w-full mb-4">
+    <div>
+      <app-text-field [control]="email" type="email" label="Correo electrónico" placeholder="Ingrese su correo electrónico" />
+      <div class="text-red-500">
+        @if (email.invalid && (email.touched || email.dirty)) {
+          @if (email.hasError('required')) {<p>El email es requerido</p>}
+          @if (email.hasError('email')) {<p>El email es invalido</p>}
+          @if (email.hasError('maxlength')) {<p>Máximo 255 caracteres</p>}
+        }
+      </div>
+    </div>
+
+    <div>
+      <app-text-field [control]="password" type="password" label="Contraseña" placeholder="Ingrese su contraseña" />
+      <div class="text-red-500">
+        @if (password.invalid && (password.touched || password.dirty)) {
+          @if (password.hasError('required')) {<p>La contraseña es requerida</p>}
+          @if (password.hasError('maxlength')) {<p>Máximo 255 caracteres</p>}
+        }
+      </div>
+    </div>
+
+    <button
+      [disabled]="isLoading"
+      class="px-6 py-1.5 self-center text-white bg-sky-500 rounded {{ isLoading && 'disabled:bg-sky-500/50 disabled:cursor-wait' }}"
+      type="submit"
+    >
+      Ingresar
+    </button>
+  </form>
+
+  <p class="text-center">
+    No tiene una cuenta? Puede registrarte
+    <a href="/auth/register" class="font-medium text-green-500">AQUI</a>
+  </p>
+</section>
