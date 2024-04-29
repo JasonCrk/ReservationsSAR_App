@@ -1,0 +1,110 @@
+<section class="w-[86vw] sm:w-[60vw] md:w-[50vw] lg:w-[34vw] xl:w-[500px]">
+  <h1 class="text-2xl font-bold text-center mb-1">REGISTRO</h1>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="flex flex-col gap-2 w-full mb-4">
+    <div class="flex gap-2 sm:flex-row flex-col">
+      <div class="flex-grow">
+        <app-text-field
+          [control]="firstName"
+          label="Nombre(s)"
+          placeholder="Ingrese su nombre(s)"
+        />
+        <div class="text-red-500">
+          @if (firstName.invalid && (firstName.touched || firstName.dirty)) {
+            @if (firstName.hasError('required')) {<p>Su nombre es requerido</p>}
+            @if (firstName.hasError('maxlength')) {<p>Máximo 60 caracteres</p>}
+          }
+        </div>
+      </div>
+
+      <div class="flex-grow">
+        <app-text-field
+          [control]="lastName"
+          label="Apellidos"
+          placeholder="Ingrese sus apellidos"
+        />
+        <div class="text-red-500">
+          @if (lastName.invalid && (lastName.touched || lastName.dirty)) {
+            @if (lastName.hasError('required')) {<p>Sus apellidos son requeridos</p>}
+            @if (lastName.hasError('maxlength')) {<p>Máximo 60 caracteres</p>}
+          }
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <app-text-field
+        [control]="phoneNumber"
+        type="tel"
+        label="Número de teléfono"
+        placeholder="#########"
+      />
+      <div class="text-red-500">
+        @if (phoneNumber.invalid && (phoneNumber.touched || phoneNumber.dirty)) {
+          @if (phoneNumber.hasError('required')) {<p>El número de teléfono es requerido</p>}
+          @if (phoneNumber.hasError('pattern')) {<p>El número de teléfono es invalido</p>}
+        }
+      </div>
+    </div>
+
+    <div>
+      <app-text-field
+        [control]="birthdate"
+        label="Fecha de nacimiento"
+        type="date"
+        placeholder="Ingrese su fecha de nacimiento"
+      />
+      <div class="text-red-500">
+        @if (birthdate.invalid && (birthdate.touched || birthdate.dirty)) {
+          @if (birthdate.hasError('required')) {<p>La fecha de nacimiento es requerida</p>}
+          @if (birthdate.hasError('isPast')) {<p>La fecha no puede ser mayor a la actual</p>}
+          @if (birthdate.hasError('notToday')) {<p>La fecha no puede ser hoy</p>}
+        }
+      </div>
+    </div>
+
+    <div>
+      <app-text-field
+        [control]="email"
+        label="Correo electrónico"
+        type="email"
+        placeholder="Ingrese su correo electrónico"
+      />
+      <div class="text-red-500">
+        @if (email.invalid && (email.touched || email.dirty)) {
+          @if (email.hasError('required')) {<p>El correo electrónico es requerido</p>}
+          @if (email.hasError('email')) {<p>El correo electrónico es invalido</p>}
+          @if (email.hasError('maxlength')) {<p>Máximo 255 caracteres</p>}
+        }
+      </div>
+    </div>
+
+    <div>
+      <app-text-field
+        [control]="password"
+        label="Contraseña"
+        type="password"
+        placeholder="Ingrese su contraseña"
+      />
+      <div class="text-red-500">
+        @if (password.invalid && (password.touched || password.dirty)) {
+          @if (password.hasError('required')) {<p>La contraseña es requerida</p>}
+          @if (password.hasError('maxlength')) {<p>Máximo 255 caracteres</p>}
+        }
+      </div>
+    </div>
+
+    <button
+      [disabled]="isLoading"
+      class="px-6 py-1.5 self-center text-white bg-green-500 rounded {{ isLoading && 'disabled:bg-sky-500/50 disabled:cursor-wait' }}"
+      type="submit"
+    >
+      Registrarse
+    </button>
+  </form>
+
+  <p class="text-center">
+    Ya estas registrado? Puedes iniciar sesión
+    <a href="/auth/register" class="font-medium text-green-500">AQUI</a>
+  </p>
+</section>

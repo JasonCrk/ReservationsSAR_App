@@ -2,8 +2,9 @@ import { Routes } from '@angular/router'
 
 import { HomePageComponent } from './pages/home-page/home-page.component'
 
-import { LoginPageComponent } from './features/auth/pages/login-page/login-page.component'
 import { AuthPageLayoutComponent } from './features/auth/pages/auth-page-layout/auth-page-layout.component'
+import { LoginPageComponent } from './features/auth/pages/login-page/login-page.component'
+import { RegisterPageComponent } from './features/auth/pages/register-page/register-page.component'
 
 import { EstablishmentDetailsPageComponent } from './features/establishment/pages/establishment-details-page/establishment-details-page.component'
 
@@ -29,6 +30,10 @@ export const routes: Routes = [
       {
         path: 'login',
         component: LoginPageComponent
+      },
+      {
+        path: 'register',
+        component: RegisterPageComponent
       }
     ]
   }
