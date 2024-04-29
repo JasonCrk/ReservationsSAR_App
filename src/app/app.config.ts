@@ -6,6 +6,8 @@ import { provideHttpClient, withFetch } from '@angular/common/http'
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools'
 
+import { provideToastr } from 'ngx-toastr';
+
 import { routes } from './app.routes';
 
 import { authReducers } from './features/auth/store/auth.reducers';
@@ -21,5 +23,10 @@ export const appConfig: ApplicationConfig = {
       maxAge: 25,
       logOnly: !isDevMode()
     }),
+
+    provideToastr({
+      positionClass: 'toast-bottom-center',
+      timeOut: 2000
+    })
   ],
 }
