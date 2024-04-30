@@ -8,13 +8,13 @@ export class DateValidators {
       : null
   }
 
-  static notToday(control: AbstractControl<string>){
+  static notToday(control: AbstractControl<string>) {
     return new Date(control.value).getDate() === new Date().getDate()
       ? { notToday: true }
       : null
   }
 
-  static isFuture(control: AbstractControl<string>){
+  static isFuture(control: AbstractControl<string>) {
     return new Date(control.value).getDate() < new Date().getDate()
       ? { isFuture: true }
       : null
