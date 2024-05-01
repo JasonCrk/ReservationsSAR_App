@@ -1,0 +1,103 @@
+<form
+  [formGroup]="searchAvailableEstablishmentsForm"
+  (ngSubmit)="onSearchSubmit()"
+  class="bg-sky-500 py-2.5 px-3 rounded-lg flex gap-2 items-start"
+>
+  <div class="flex flex-col">
+    <div class="flex items-start">
+      <div>
+        <app-text-field
+          type="datetime-local"
+          [control]="realizationDate"
+          [error]="
+            realizationDate.invalid &&
+            (realizationDate.touched || realizationDate.dirty) ||
+            (searchAvailableEstablishmentsForm.hasError('datetimeDifference') ||
+            searchAvailableEstablishmentsForm.hasError('datetimesEquals'))"
+          inputClass="rounded-lg border-2 border-sky-800"
+          labelClass="text-white leading-none"
+        />
+
+        <div class="text-red-700">
+          @if (realizationDate.invalid && (realizationDate.touched || realizationDate.dirty || isSearched)) {
+            @if (realizationDate.hasError('required')) {<p class="text-sm pt-1">La fecha de realización es requerida</p>}
+            @else if (realizationDate.hasError('notToday')) {<p>No puede ser la fecha de hoy</p>}
+            @else if (realizationDate.hasError('isFuture')) {<p>Debe ser mayor a la fecha actual</p>}
+            @else if (realizationDate.hasError('onlyHours')) {<p>Solo especifique la hora</p>}
+            @else if (realizationDate.hasError('required')) {<p>La fecha de realización es requerido</p>}
+          }
+        </div>
+      </div>
+
+      <div
+        class="w-7 border-2 border-dashed mt-[21px] {{
+          searchAvailableEstablishmentsForm.hasError('datetimeDifference')
+            ? 'border-red-600'
+            : 'border-sky-800'
+        }}"
+      ></div>
+
+      <div>
+        <app-text-field
+          type="datetime-local"
+          [control]="finishDate"
+          [error]="
+            finishDate.invalid &&
+            (finishDate.touched || finishDate.dirty) ||
+            (searchAvailableEstablishmentsForm.hasError('datetimeDifference') ||
+            searchAvailableEstablishmentsForm.hasError('datetimesEquals'))"
+          inputClass="rounded-lg border-2 border-sky-800"
+          labelClass="text-white leading-none"
+        />
+
+        <div class="text-red-700">
+          @if (finishDate.invalid && (finishDate.touched || finishDate.dirty || isSearched)) {
+            @if (finishDate.hasError('required')) {<p class="text-sm pt-1">La fecha de finalización es requerida</p>}
+            @else if (finishDate.hasError('notToday')) {<p>No puede ser la fecha de hoy</p>}
+            @else if (finishDate.hasError('isFuture')) {<p>Debe ser mayor a la fecha actual</p>}
+            @else if (finishDate.hasError('onlyHours')) {<p>Solo especifique la hora</p>}
+          }
+        </div>
+      </div>
+    </div>
+
+    @if (
+      searchAvailableEstablishmentsForm.invalid &&
+      realizationDate.valid &&
+      finishDate.valid
+    ) {
+      <p class="text-center text-red-700 leading-none pt-1">
+        @if (searchAvailableEstablishmentsForm.hasError('datetimesEquals')) {
+          No pueden ser iguales
+        } @else if (searchAvailableEstablishmentsForm.hasError('datetimeDifference')) {
+          La fecha de inicio debe ser menor a la fecha de finilización
+        }
+      </p>
+    }
+  </div>
+
+  <div>
+    <app-select-field
+      [control]="topicId"
+      [options$]="topics$"
+      placeholder="-- Tema --"
+      selectClass="border-2 border-sky-800"
+    />
+
+    <div class="text-red-500">
+      @if (topicId.invalid && (topicId.touched || topicId.dirty)) {
+        @if (topicId.hasError('isUUID')) {<p>El tema es invalido</p>}
+      }
+    </div>
+  </div>
+
+  <button class="bg-sky-900 px-6 py-[10px] rounded text-white" type="submit">
+    Buscar
+  </button>
+
+  @if (hasSearchParams) {
+    <button class="px-5 bg-red-500 py-[10px] text-white rounded-md" (click)="onClearForm()">
+      Limpiar
+    </button>
+  }
+</form>
