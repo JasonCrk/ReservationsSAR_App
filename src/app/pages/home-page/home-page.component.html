@@ -1,1 +1,16 @@
-<p>home-page works!</p>
+<section class="bg-green-600 flex justify-center items-center h-[48vh] flex-col">
+  <h1 class="text-5xl text-white font-bold">Sauce Alto Resort</h1>
+  <h2 class="text-2xl text-white">Reservaciones</h2>
+</section>
+
+<section class="py-20 px-5 sm:px-16 lg:px-32 2xl:px-[10vw] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-5 gap-x-4 relative">
+  <article class="absolute left-1/2 -translate-x-1/2 -top-9">
+    <app-search-available-establishments-form />
+  </article>
+
+  @if (availableEstablishments$ | async; as availableEstablishments) {
+    @for (establishment of availableEstablishments; track establishment.id) {
+      <app-establishment-item [establishment]="establishment" />
+    }
+  }
+</section>
