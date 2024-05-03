@@ -13,8 +13,9 @@ export type AuthInitialState = {
 
 export const initialState: AuthInitialState = {
   isAuth: false,
-  refresh: null,
-  access: null,
+  // Se muy bien que esta no es la mejor manera de almácen los tokens
+  refresh: localStorage.getItem('refreshToken'),
+  access: localStorage.getItem('accessToken'),
   user: null
 }
 

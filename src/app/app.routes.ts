@@ -10,22 +10,30 @@ import { EstablishmentDetailsPageComponent } from './features/establishment/page
 
 import { EstablishmentManagerPageComponent } from './features/reservation/pages/establishment-manager-page/establishment-manager-page.component'
 
+import { isAuthOrReadonlyGuard } from './features/auth/guards/is-auth-or-readonly.guard'
+import { isAuthGuard } from './features/auth/guards/is-auth.guard'
+import { notAuthGuard } from './features/auth/guards/not-auth.guard'
+
 export const routes: Routes = [
   {
     path: '',
-    component: HomePageComponent
+    component: HomePageComponent,
+    canActivate: [isAuthOrReadonlyGuard]
   },
   {
     path: 'establishments/:establishmentId',
-    component: EstablishmentDetailsPageComponent
+    component: EstablishmentDetailsPageComponent,
+    canActivate: [isAuthOrReadonlyGuard]
   },
   {
     path: 'r/manager',
-    component: EstablishmentManagerPageComponent
+    component: EstablishmentManagerPageComponent,
+    canActivate: [isAuthGuard]
   },
   {
     path: 'auth',
     component: AuthPageLayoutComponent,
+    canActivate: [notAuthGuard],
     children: [
       {
         path: 'login',

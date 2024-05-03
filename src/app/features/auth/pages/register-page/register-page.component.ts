@@ -15,6 +15,7 @@ import { ApiAuthService } from '../../services/api-auth.service';
 import { TextFieldComponent } from '../../../../components/text-field/text-field.component';
 
 import { registerUserForm } from '../../forms';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-register-page',
@@ -29,6 +30,7 @@ import { registerUserForm } from '../../forms';
 export class RegisterPageComponent {
 
   private readonly _apiAuthService = inject(ApiAuthService)
+  private readonly _authLocalStorage = inject(LocalStorageService)
   private readonly _toasts= inject(ToastrService)
   private readonly _store = inject(Store)
   private readonly _router = inject(Router)
@@ -47,7 +49,12 @@ export class RegisterPageComponent {
       .subscribe({
         next: ({ accessToken: access, refreshToken: refresh }) => {
           this._store.dispatch(AuthActions.setTokens({ access, refresh }))
+
+          this._authLocalStorage.setAccessToken(access)
+          this._authLocalStorage.setRefreshToken(refresh)
+
           this._router.navigate(['/'])
+
           this.isLoading = false
         },
         error: (err) => {
