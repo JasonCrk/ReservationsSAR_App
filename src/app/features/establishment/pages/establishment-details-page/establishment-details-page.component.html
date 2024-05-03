@@ -1,1 +1,36 @@
-<p>establishment-details-page works!</p>
+<app-navbar />
+
+@if (establishment$ | async; as establishment) {
+  <section class="px-24 py-4">
+    <h1 class="text-4xl font-bold">{{ establishment.name }}</h1>
+
+    <div class="py-3">
+      <p>
+        <span class="font-bold">Temas relacionados:</span> {{ establishment.topics }}
+      </p>
+      <p>
+        <span class="font-bold">Capacidad máxima de personas:</span> {{ establishment.maxCapacity }}
+      </p>
+    </div>
+
+    <div class="flex gap-4 items-start">
+      <article class="w-2/3">
+        <div class="grid grid-cols-2 grid-rows-2 gap-2">
+          @for (image of establishment.images; track image.id) {
+            <img
+              [src]="image.imageUrl"
+              class="w-full [&:nth-child(1)]:object-cover [&:nth-child(1)]:row-span-3 [&:nth-child(2)]:object-cover [&:nth-child(3)]:object-cover"
+            />
+          }
+        </div>
+        <p class="py-2">
+          {{ establishment.description }}
+        </p>
+      </article>
+
+      <article>
+        Hello
+      </article>
+    </div>
+  </section>
+}
