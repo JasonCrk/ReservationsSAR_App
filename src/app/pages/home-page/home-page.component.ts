@@ -10,12 +10,14 @@ import { ApiEstablishmentService } from '../../features/establishment/services/a
 
 import { EstablishmentItemComponent } from '../../features/establishment/components/ui/establishment-item/establishment-item.component';
 import { SearchAvailableEstablishmentsFormComponent } from '../../features/establishment/components/search-available-establishments-form/search-available-establishments-form.component';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
   imports: [
     CommonModule,
+    NavbarComponent,
     EstablishmentItemComponent,
     SearchAvailableEstablishmentsFormComponent
   ],

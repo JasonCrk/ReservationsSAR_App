@@ -3,7 +3,7 @@ import { CanActivateFn } from '@angular/router';
 
 import { Store } from '@ngrx/store';
 
-import { catchError, firstValueFrom, map, of } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { selectAuthTokens } from '../store/auth.selectors';
 import { AuthActions } from '../store/auth.actions';
@@ -31,15 +31,11 @@ export const isAuthOrReadonlyGuard: CanActivateFn = async (route, state) => {
     return true;
   }
 
-  let currentAccessToken = authTokens.access
-  let currentRefreshToken = authTokens.refresh
-
   let isInvalidToken = false
 
-  apiAuthService.verifyAccessToken(authTokens.access).pipe(
-    catchError(() => {
+  apiAuthService.verifyAccessToken(authTokens.access).subscribe({
+    error: () => {
       if (authTokens.refresh === null) {
-
         store.dispatch(AuthActions.logout())
 
         authLocalStorage.removeAccessToken()
@@ -47,29 +43,45 @@ export const isAuthOrReadonlyGuard: CanActivateFn = async (route, state) => {
 
         isInvalidToken = true
 
-        return of()
+        return
       }
 
-      apiAuthService.refreshAccessToken(authTokens.refresh).pipe(
-        map(({ accessToken, refreshToken }) => {
-          currentAccessToken = accessToken
-          currentRefreshToken = refreshToken
-        })
-      )
+      apiAuthService.refreshAccessToken(authTokens.refresh).subscribe({
+        error: () => {
+          store.dispatch(AuthActions.logout())
 
-      return of()
-    })
-  )
+          authLocalStorage.removeAccessToken()
+          authLocalStorage.removeRefreshToken()
+        },
+        next: ({ accessToken, refreshToken }) => {
+          apiAuthService.getUserByAccessToken(accessToken).subscribe({
+            next: user => {
+              store.dispatch(AuthActions.setUser({ user }))
+              store.dispatch(AuthActions.setTokens({
+                access: accessToken,
+                refresh: refreshToken
+              }))
 
-  if (isInvalidToken) return true
+              authLocalStorage.setAccessToken(accessToken)
+              authLocalStorage.setRefreshToken(refreshToken)
+            }
+          })
+        }
+      })
+    },
+    next: () => {
+      apiAuthService.getUserByAccessToken(authTokens.access!).subscribe({
+        next: user => {
+          store.dispatch(AuthActions.setUser({ user }))
+          store.dispatch(AuthActions.setTokens({
+            access: authTokens.access!,
+            refresh: authTokens.refresh!
+          }))
 
-  apiAuthService.getUserByAccessToken(currentAccessToken).subscribe({
-    next: user => {
-      store.dispatch(AuthActions.setUser({ user }))
-      store.dispatch(AuthActions.setTokens({
-        access: currentAccessToken,
-        refresh: currentRefreshToken
-      }))
+          authLocalStorage.setAccessToken(authTokens.access!)
+          authLocalStorage.setRefreshToken(authTokens.refresh!)
+        }
+      })
     }
   })
 
