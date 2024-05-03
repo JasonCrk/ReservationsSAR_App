@@ -1,0 +1,39 @@
+@if (auth$ | async; as auth) {
+  <nav class="flex px-16 w-full h-20 justify-between items-center">
+    <div class="flex items-center gap-4">
+      <a href="/">
+        <img ngSrc="/assets/logo-sauce-alto-resort.png" width="120" height="70" priority aria-label="Logo de Sauce Alto Resort" />
+      </a>
+
+      @if (auth.isAuth) {
+        <a
+          href="/r/manager"
+          class="text-lg text-white px-2 py-1 hover:underline hover:underline-offset-8"
+        >
+          Mis reservas
+        </a>
+      }
+    </div>
+
+    @if (auth.isAuth) {
+      <div class="flex gap-4 items-center">
+        <div class="px-6 py-2 bg-black/50 text-white">
+          {{ auth.user?.firstName }} {{ auth.user?.lastName }}
+        </div>
+
+        <button
+          class="p-2.5 bg-red-500 text-white rounded-md {{ isLogout && 'disabled:opacity-50' }}"
+          [disabled]="isLogout"
+          (click)="onLogout()"
+        >
+          <img ngSrc="/assets/exit-icon.png" width="20" height="20" priority />
+        </button>
+      </div>
+    } @else {
+      <div class="flex items-center gap-4 text-white">
+        <a href="/auth/login" class="bg-blue-700 px-4 py-2 rounded">Iniciar sesión</a>
+        <a href="/auth/register" class="bg-green-800 px-4 py-2 rounded">Registrarse</a>
+      </div>
+    }
+  </nav>
+}
