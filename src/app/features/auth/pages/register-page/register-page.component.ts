@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
@@ -23,7 +23,8 @@ import { LocalStorageService } from '../../services/local-storage.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    TextFieldComponent
+    TextFieldComponent,
+    RouterLink
   ],
   templateUrl: './register-page.component.html',
 })

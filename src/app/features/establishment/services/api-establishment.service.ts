@@ -6,6 +6,7 @@ import { environment } from '../../../../environments/environment';
 import type { EstablishmentItem } from '../models/EstablishmentItem';
 import type { EstablishmentDetails } from '../models/EstablishmentDetails';
 import type { SearchAvailableEstablishmentsParams } from '../models/SearchAvailableEstablishmentsParams';
+import { TopicItem } from '../../topic/models/TopicItem';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,10 @@ export class ApiEstablishmentService {
 
   getOne(establishmentId: string) {
     return this._http.get<EstablishmentDetails>(`${this.BASE_API_URL}/${establishmentId}`)
+  }
+
+  getEstablishmentTopics(establishmentId: string) {
+    return this._http.get<TopicItem[]>(`${this.BASE_API_URL}/${establishmentId}/topics`)
   }
 
   searchAvailable(params?: SearchAvailableEstablishmentsParams) {

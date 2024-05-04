@@ -31,7 +31,7 @@ export class EstablishmentItemComponent implements OnInit {
 
         const searchParams: Params = {
           realization: realizationDate,
-          finishDate: finishDate,
+          finish: finishDate,
         }
 
         if (topicId !== '') searchParams['topic'] = topicId

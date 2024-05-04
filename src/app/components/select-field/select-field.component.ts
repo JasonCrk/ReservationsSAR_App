@@ -23,5 +23,6 @@ export class SelectFieldComponent {
   @Input() labelClass!: string
   @Input() containerClass!: string
   @Input() placeholder!: string
+  @Input() error: boolean = false
 
 }

@@ -1,0 +1,95 @@
+<form
+  [formGroup]="reservationForm"
+  (ngSubmit)="onReservationSubmit()"
+  class="p-4 shadow-md shadow-gray-600/30 rounded-lg flex flex-col gap-2.5 mb-4"
+>
+  <div>
+    <app-text-field
+      type="datetime-local"
+      [control]="realizationDate"
+      label="Fecha de realización"
+      inputClass="bg-slate-100 border border-gray-300"
+      [error]="
+        realizationDate.invalid &&
+        (realizationDate.touched || realizationDate.dirty || isSubmitted) ||
+        (reservationForm.hasError('datetimeDifference') ||
+        reservationForm.hasError('datetimesEquals'))"
+    />
+
+    @if (realizationDate.invalid && (realizationDate.touched || realizationDate.dirty || isSubmitted)) {
+      <div class="text-red-500">
+        @if (realizationDate.hasError('required')) {<p class="text-sm pt-1">La fecha de realización es requerida</p>}
+        @else if (realizationDate.hasError('notToday')) {<p>No puede ser la fecha de hoy</p>}
+        @else if (realizationDate.hasError('isFuture')) {<p>Debe ser mayor a la fecha actual</p>}
+        @else if (realizationDate.hasError('onlyHours')) {<p>Solo especifique la hora</p>}
+      </div>
+    }
+  </div>
+
+  <div>
+    <app-text-field
+      type="datetime-local"
+      [control]="finishDate"
+      label="Fecha de finalización"
+      inputClass="bg-slate-100 border border-gray-300"
+      [error]="
+        finishDate.invalid &&
+        (finishDate.touched || finishDate.dirty || isSubmitted) ||
+        (reservationForm.hasError('datetimeDifference') ||
+        reservationForm.hasError('datetimesEquals'))"
+    />
+
+    @if (finishDate.invalid && (finishDate.touched || finishDate.dirty || isSubmitted)) {
+      <div class="text-red-500">
+        @if (finishDate.hasError('required')) {<p class="text-sm pt-1">La fecha de finalización es requerida</p>}
+        @else if (finishDate.hasError('notToday')) {<p>No puede ser la fecha de hoy</p>}
+        @else if (finishDate.hasError('isFuture')) {<p>Debe ser mayor a la fecha actual</p>}
+        @else if (finishDate.hasError('onlyHours')) {<p>Solo especifique la hora</p>}
+      </div>
+    }
+  </div>
+
+  <div>
+    <app-select-field
+      [control]="topicId"
+      [options$]="topics$"
+      label="Tema"
+      selectClass="bg-slate-100 border border-gray-300"
+      placeholder="-- Seleccione el tema --"
+      [error]="topicId.invalid && (topicId.touched || topicId.dirty || isSubmitted)"
+    />
+
+    @if (topicId.invalid && (topicId.touched || topicId.dirty || isSubmitted)) {
+      <div class="text-red-500">
+        @if (topicId.hasError('isUUID')) {<p>El tema es invalido</p>}
+        @else if (topicId.hasError('required')) {<p>El tema es requerido</p>}
+      </div>
+    }
+  </div>
+
+  @if (
+    reservationForm.hasError('datetimeDifference') ||
+    reservationForm.hasError('datetimesEquals')
+  ) {
+    <div class="py-2 text-red-600 text-center">
+      @if (reservationForm.hasError('datetimeDifference')) { La fecha de realización debe ser menor a la fecha de finilización  }
+      @else if (reservationForm.hasError('datetimesEquals')) { Las fechas no pueden ser iguales }
+    </div>
+  }
+
+  <button
+    class="px-4 py-2 rounded bg-green-500 text-white disabled:opacity-50 {{ isLoading && ' disabled:cursor-wait' }} {{ isBlockForm && ' disabled:cursor-not-allowed' }}"
+    type="submit"
+    [disabled]="isLoading || isBlockForm"
+  >
+    Realizar reserva
+  </button>
+</form>
+
+@if (checkoutClientSecret !== null && reservationData !== null) {
+  <app-stripe-checkout-form
+    [clientSecret]="checkoutClientSecret"
+    [establishmentId]="establishmentId"
+    [reservationData]="reservationData"
+  />
+}
