@@ -3,7 +3,14 @@
 
   <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="flex flex-col gap-2 w-full mb-4">
     <div>
-      <app-text-field [control]="email" type="email" label="Correo electrónico" placeholder="Ingrese su correo electrónico" />
+      <app-text-field
+        [control]="email"
+        type="email"
+        label="Correo electrónico"
+        placeholder="Ingrese su correo electrónico"
+        inputClass="bg-slate-200"
+      />
+
       <div class="text-red-500">
         @if (email.invalid && (email.touched || email.dirty)) {
           @if (email.hasError('required')) {<p>El email es requerido</p>}
@@ -14,7 +21,13 @@
     </div>
 
     <div>
-      <app-text-field [control]="password" type="password" label="Contraseña" placeholder="Ingrese su contraseña" />
+      <app-text-field
+        [control]="password"
+        type="password"
+        label="Contraseña"
+        placeholder="Ingrese su contraseña"
+        inputClass="bg-slate-200"
+      />
       <div class="text-red-500">
         @if (password.invalid && (password.touched || password.dirty)) {
           @if (password.hasError('required')) {<p>La contraseña es requerida</p>}
