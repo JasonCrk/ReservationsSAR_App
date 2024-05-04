@@ -1,22 +1,24 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 
 import { Store } from '@ngrx/store';
+
+import { ToastrService } from 'ngx-toastr';
 
 import { AuthActions } from '../../features/auth/store/auth.actions';
 import { selectAuth } from '../../features/auth/store/auth.selectors';
 
 import { ApiAuthService } from '../../features/auth/services/api-auth.service';
 import { LocalStorageService } from '../../features/auth/services/local-storage.service';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [
     CommonModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    RouterLink
   ],
   templateUrl: './navbar.component.html',
 })

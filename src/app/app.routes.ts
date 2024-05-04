@@ -9,6 +9,7 @@ import { RegisterPageComponent } from './features/auth/pages/register-page/regis
 import { EstablishmentDetailsPageComponent } from './features/establishment/pages/establishment-details-page/establishment-details-page.component'
 
 import { EstablishmentManagerPageComponent } from './features/reservation/pages/establishment-manager-page/establishment-manager-page.component'
+import { ReservationPaymentSuccessfulPageComponent } from './features/reservation/pages/reservation-payment-successful-page/reservation-payment-successful-page.component'
 
 import { isAuthOrReadonlyGuard } from './features/auth/guards/is-auth-or-readonly.guard'
 import { isAuthGuard } from './features/auth/guards/is-auth.guard'
@@ -28,6 +29,11 @@ export const routes: Routes = [
   {
     path: 'r/manager',
     component: EstablishmentManagerPageComponent,
+    canActivate: [isAuthGuard]
+  },
+  {
+    path: 'reservation/checkout',
+    component: ReservationPaymentSuccessfulPageComponent,
     canActivate: [isAuthGuard]
   },
   {

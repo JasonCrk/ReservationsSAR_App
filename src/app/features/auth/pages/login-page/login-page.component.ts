@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { Store } from '@ngrx/store';
@@ -24,7 +24,8 @@ import { loginForm } from '../../forms';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    TextFieldComponent
+    TextFieldComponent,
+    RouterLink
   ],
   templateUrl: './login-page.component.html',
 })
