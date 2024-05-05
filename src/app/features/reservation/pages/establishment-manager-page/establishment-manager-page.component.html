@@ -1,1 +1,9 @@
-<p>establishment-manager-page works!</p>
+<app-navbar />
+
+<section class="px-7 sm:px-14 lg:px-24 py-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+  @if (reservations$ | async; as reservations) {
+    @for (reservation of reservations; track reservation.id) {
+      <app-reservation-item [reservation]="reservation" />
+    }
+  }
+</section>

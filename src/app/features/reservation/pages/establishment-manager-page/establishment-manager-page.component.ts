@@ -1,12 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { ApiReservationService } from '../../services/api-reservation.service';
+
+import { NavbarComponent } from '../../../../components/navbar/navbar.component';
+import { ReservationItemComponent } from '../../components/reservation-item/reservation-item.component';
 
 @Component({
   selector: 'app-establishment-manager-page',
   standalone: true,
-  imports: [],
+  imports: [
+    NavbarComponent,
+    CommonModule,
+    ReservationItemComponent
+  ],
   templateUrl: './establishment-manager-page.component.html',
-  styles: ``
 })
 export class EstablishmentManagerPageComponent {
 
+  private readonly _apiReservationService = inject(ApiReservationService)
+
+  reservations$ = this._apiReservationService.getAllReservations()
 }

@@ -7,6 +7,7 @@ import { GenerateReservationCheckout } from '../models/GenerateReservationChecko
 import { ConfirmReservationCheckout } from '../models/ConfirmReservationCheckoutRequest';
 
 import { CTX_REQUIRE_AUTH } from '../../../interceptors/with-authentication-interceptor.interceptor';
+import { ReservationItem } from '../models/ReservationItem';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,14 @@ import { CTX_REQUIRE_AUTH } from '../../../interceptors/with-authentication-inte
 export class ApiReservationService {
 
   private readonly _http = inject(HttpClient)
+
   private readonly BASE_API_URL = `${environment.baseApiUrl}/reservations`
+
+  getAllReservations() {
+    return this._http.get<ReservationItem[]>(this.BASE_API_URL, {
+      context: new HttpContext().set(CTX_REQUIRE_AUTH, true)
+    })
+  }
 
   generateCheckout(request: GenerateReservationCheckout) {
     return this._http.post<{ clientSecret: string }>(`${this.BASE_API_URL}/checkout`, request, {

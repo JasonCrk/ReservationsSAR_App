@@ -35,34 +35,33 @@ export const isAuthGuard: CanActivateFn = async (route, state) => {
     return false;
   }
 
-
-  let currentAccessToken = authTokens.access
-  let currentRefreshToken = authTokens.refresh
-
   return await firstValueFrom(apiAuthService.verifyAccessToken(authTokens.access)
     .pipe(
-      map(async () => await firstValueFrom(apiAuthService.getUserByAccessToken(currentAccessToken).pipe(
-        map(user => {
-          store.dispatch(AuthActions.setUser({ user }))
-          store.dispatch(AuthActions.setTokens({
-            access: currentAccessToken,
-            refresh: currentRefreshToken
-          }))
+      map(async () => {
+        return await firstValueFrom(apiAuthService.getUserByAccessToken(authTokens.access!)
+          .pipe(
+            map(user => {
+              store.dispatch(AuthActions.setUser({ user }))
+              store.dispatch(AuthActions.setTokens({
+                access: authTokens.access!,
+                refresh: authTokens.refresh!
+              }))
 
-          return true
-        }),
-        catchError(() => {
-          store.dispatch(AuthActions.logout())
+              return true
+            }),
+            catchError(() => {
+              store.dispatch(AuthActions.logout())
 
-          authLocalStorage.removeAccessToken()
-          authLocalStorage.removeRefreshToken()
+              authLocalStorage.removeAccessToken()
+              authLocalStorage.removeRefreshToken()
 
-          router.navigate(['/auth/login'])
+              router.navigate(['/auth/login'])
 
-          return of(false)
-        })
-      ))),
-      catchError(() => {
+              return of(false)
+            })
+          ))
+      }),
+      catchError(async () => {
         if (authTokens.refresh === null) {
           store.dispatch(AuthActions.logout())
 
@@ -71,35 +70,50 @@ export const isAuthGuard: CanActivateFn = async (route, state) => {
 
           router.navigate(['/auth/login'])
 
-          return of(false)
+          return false
         }
 
-        return apiAuthService.refreshAccessToken(authTokens.refresh).pipe(
-          map(async ({ accessToken, refreshToken }) => {
-            return await firstValueFrom(apiAuthService.getUserByAccessToken(accessToken).pipe(
-              map(user => {
-                store.dispatch(AuthActions.setUser({ user }))
-                store.dispatch(AuthActions.setTokens({
-                  access: accessToken,
-                  refresh: refreshToken
-                }))
+        return await firstValueFrom(apiAuthService.refreshAccessToken(authTokens.refresh!)
+          .pipe(
+            map(async ({ refreshToken, accessToken }) => {
+              authLocalStorage.setAccessToken(accessToken)
+              authLocalStorage.setRefreshToken(refreshToken)
 
-                return true
-              })
-            ))
-          }),
-          catchError(() => {
-            store.dispatch(AuthActions.logout())
+              return await firstValueFrom(apiAuthService.getUserByAccessToken(accessToken)
+                .pipe(
+                  map(user => {
+                    store.dispatch(AuthActions.setUser({ user }))
+                    store.dispatch(AuthActions.setTokens({
+                      access: accessToken,
+                      refresh: refreshToken
+                    }))
 
-            authLocalStorage.removeAccessToken()
-            authLocalStorage.removeRefreshToken()
+                    return true
+                  }),
+                  catchError(() => {
+                    store.dispatch(AuthActions.logout())
 
-            router.navigate(['/auth/login'])
+                    authLocalStorage.removeAccessToken()
+                    authLocalStorage.removeRefreshToken()
 
-            return of(false)
-          })
-        )
+                    router.navigate(['/auth/login'])
+
+                    return of(false)
+                  })
+                ))
+            }),
+            catchError(() => {
+              store.dispatch(AuthActions.logout())
+
+              authLocalStorage.removeAccessToken()
+              authLocalStorage.removeRefreshToken()
+
+              router.navigate(['/auth/login'])
+
+              return of(false)
+            })
+          ))
       })
     ))
-};
+}
 
