@@ -1,0 +1,22 @@
+<article class="px-4 py-3 rounded-lg border border-gray-400">
+  <h6 class="text-xl font-semibold mb-2 text-nowrap overflow-hidden overflow-ellipsis">{{ reservation.establishment.name }}</h6>
+
+  <div class="flex items-center text-sm mb-1.5">
+    <span class="text-white text-nowrap bg-gray-500 px-3 py-1 rounded flex-grow">
+      {{ reservation.realizationDate | date:"d/M/yy '-' h a" }}
+    </span>
+
+    <div class="h-0.5 w-full border-2 border-dashed border-gray-700"></div>
+
+    <span class="text-white text-nowrap bg-gray-500 px-3 py-1 rounded flex-grow">
+      {{ reservation.finishDate | date:"d/M/yy '-' h a" }}
+    </span>
+  </div>
+
+  <div class="flex justify-between items-center text-gray-800">
+    <span>#{{ reservation.topic.name }}</span>
+    <span class="px-3 py-1 text-sm rounded-full border border-gray-700 bg-gray-100">
+      {{ reservationStatus }}
+    </span>
+  </div>
+</article>
