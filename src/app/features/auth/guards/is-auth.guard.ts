@@ -76,6 +76,9 @@ export const isAuthGuard: CanActivateFn = async (route, state) => {
         return await firstValueFrom(apiAuthService.refreshAccessToken(authTokens.refresh!)
           .pipe(
             map(async ({ refreshToken, accessToken }) => {
+              authLocalStorage.setAccessToken(accessToken)
+              authLocalStorage.setRefreshToken(refreshToken)
+
               return await firstValueFrom(apiAuthService.getUserByAccessToken(accessToken)
                 .pipe(
                   map(user => {
