@@ -47,6 +47,9 @@ export const isAuthGuard: CanActivateFn = async (route, state) => {
                 refresh: authTokens.refresh!
               }))
 
+              authLocalStorage.setAccessToken(authTokens.access!)
+              authLocalStorage.setRefreshToken(authTokens.refresh!)
+
               return true
             }),
             catchError(() => {
