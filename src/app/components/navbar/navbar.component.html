@@ -1,17 +1,17 @@
 @if (auth$ | async; as auth) {
   <nav class="flex px-16 w-full h-20 justify-between items-center">
-    <div class="text-lg text-white bg-green-600 w-fit h-12 flex items-center pr-5 gap-2.5">
+    <div class="text-lg text-white {{ auth.isAuth && 'bg-green-600' }} w-fit h-12 flex items-center pr-5 gap-2.5">
       <a routerLink="/">
         <img ngSrc="/assets/logo-sauce-alto-resort.png" width="120" height="70" priority aria-label="Logo de Sauce Alto Resort" />
       </a>
 
       @if (auth.isAuth) {
-          <a
-            routerLink="/r/manager"
-            class="hover:underline hover:underline-offset-4 px-1.5 py-1"
-           >
-            Mis reservas
-          </a>
+        <a
+          routerLink="/r/manager"
+          class="hover:underline hover:underline-offset-4 px-1.5 py-1"
+         >
+          Mis reservas
+        </a>
       }
     </div>
 
