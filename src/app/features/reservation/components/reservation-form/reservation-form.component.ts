@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { Store } from '@ngrx/store';
@@ -34,17 +34,17 @@ import { establishmentReservationGroupForm } from '../../forms';
   ],
   templateUrl: './reservation-form.component.html',
 })
-export class ReservationFormComponent implements OnInit {
+export class ReservationFormComponent implements OnInit, OnDestroy {
 
   @Input({ required: true }) establishmentId!: string
   @Input({ required: true }) establishmentPricePerHour!: number
-  @Input() defaultValues: ReservationFormData | null = null
 
   private readonly _apiEstablishmentService = inject(ApiEstablishmentService)
   private readonly _apiReservationService = inject(ApiReservationService)
   private readonly _toast = inject(ToastrService)
   private readonly _store = inject(Store)
   private readonly _router = inject(Router)
+  private readonly _activatedRoute = inject(ActivatedRoute)
 
   topics$!: Observable<TopicItem[]>
 
@@ -59,9 +59,20 @@ export class ReservationFormComponent implements OnInit {
   ngOnInit(): void {
     this.topics$ = this._apiEstablishmentService.getEstablishmentTopics(this.establishmentId)
 
-    if (this.defaultValues !== null) {
-      this.reservationForm.setValue({ ...this.defaultValues })
-    }
+    this._activatedRoute.queryParams.subscribe({
+      next: ({ realization, finish, topic }) => {
+        if (!realization || !finish) return
+
+        this.reservationForm.setValue({ finishDate: finish, realizationDate: realization, topicId: topic })
+      }
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.reservationForm.reset(
+      { finishDate: '', realizationDate: '', topicId: '' },
+      { emitEvent: false }
+    )
   }
 
   async onReservationSubmit() {

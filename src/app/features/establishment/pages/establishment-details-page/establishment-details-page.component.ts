@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { map } from 'rxjs';
@@ -32,14 +32,12 @@ import { ReservationFormComponent } from '../../../reservation/components/reserv
     }
   `
 })
-export class EstablishmentDetailsPageComponent implements OnInit {
+export class EstablishmentDetailsPageComponent {
 
-  private readonly routeSnapshot = inject(ActivatedRoute).snapshot
+  private readonly _activatedRoute = inject(ActivatedRoute)
   private readonly _apiEstablishmentService = inject(ApiEstablishmentService)
 
-  defaultValueReservationForm: ReservationFormData | null = null
-
-  establishment$ = this._apiEstablishmentService.getOne(this.routeSnapshot.params['establishmentId']).pipe(
+  establishment$ = this._apiEstablishmentService.getOne(this._activatedRoute.snapshot.params['establishmentId']).pipe(
       map(({ topics, ...res }) => {
 
         const topicsInLine = topics.reduce(
@@ -49,19 +47,4 @@ export class EstablishmentDetailsPageComponent implements OnInit {
         return { ...res, topics: topicsInLine }
       })
     )
-
-  ngOnInit(): void {
-    const realizationDate = this.routeSnapshot.queryParams['realization'] ?? ''
-    const finishDate = this.routeSnapshot.queryParams['finish'] ?? ''
-
-    if (!realizationDate || !finishDate) return
-
-    const topicId = this.routeSnapshot.queryParams['topic'] ?? ''
-
-    this.defaultValueReservationForm = {
-      finishDate,
-      realizationDate,
-      topicId
-    }
-  }
 }
