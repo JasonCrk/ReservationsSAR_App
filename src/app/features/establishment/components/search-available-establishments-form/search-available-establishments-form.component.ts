@@ -68,7 +68,7 @@ export class SearchAvailableEstablishmentsFormComponent implements OnInit {
   }
 
   onClearForm() {
-    this.searchAvailableEstablishmentsForm.setValue({
+    this.searchAvailableEstablishmentsForm.reset({
       realizationDate: '',
       finishDate: '',
       topicId: ''
