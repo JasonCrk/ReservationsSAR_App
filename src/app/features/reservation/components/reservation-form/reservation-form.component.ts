@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { Store } from '@ngrx/store';
 
-import type { Observable } from 'rxjs';
+import { firstValueFrom, type Observable } from 'rxjs';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -64,7 +64,7 @@ export class ReservationFormComponent implements OnInit {
     }
   }
 
-  onReservationSubmit() {
+  async onReservationSubmit() {
     this.isLoading = true
     this.isSubmitted = true
 
@@ -73,38 +73,36 @@ export class ReservationFormComponent implements OnInit {
       return
     }
 
-    this._store.select(selectIsAuth).subscribe({
-      next: ({ isAuth }) => {
-        if (!isAuth) {
-          this._router.navigate(['/auth/login'])
-          return
+    const { isAuth } = await firstValueFrom(this._store.select(selectIsAuth))
+
+    if (!isAuth) {
+      this._router.navigate(['/auth/login'])
+      return
+    }
+
+    const reservationRequest = { ...this.reservationForm.value, establishmentId: this.establishmentId }
+
+    this._apiReservationService.generateCheckout(reservationRequest as GenerateReservationCheckout).subscribe({
+      next: ({ clientSecret }) => {
+        this.checkoutClientSecret = clientSecret
+        this.reservationData = {
+          realizationDate: reservationRequest.realizationDate!,
+          topicId: reservationRequest.topicId!,
+          finishDate: reservationRequest.finishDate!
         }
 
-        const reservationRequest = { ...this.reservationForm.value, establishmentId: this.establishmentId }
+        this.isLoading = false
+        this.isSubmitted = false
+        this.isBlockForm = true
 
-        this._apiReservationService.generateCheckout(reservationRequest as GenerateReservationCheckout).subscribe({
-          next: ({ clientSecret }) => {
-            this.checkoutClientSecret = clientSecret
-            this.reservationData = {
-              realizationDate: reservationRequest.realizationDate!,
-              topicId: reservationRequest.topicId!,
-              finishDate: reservationRequest.finishDate!
-            }
-
-            this.isLoading = false
-            this.isSubmitted = false
-            this.isBlockForm = true
-
-            this.realizationDate.disable()
-            this.finishDate.disable()
-            this.topicId.disable()
-          },
-          error: err => {
-            this._toast.error(err.error.message, 'Reservación de establecimiento')
-            this.isLoading = false
-            this.isSubmitted = false
-          }
-        })
+        this.realizationDate.disable()
+        this.finishDate.disable()
+        this.topicId.disable()
+      },
+      error: err => {
+        this._toast.error(err.error.message, 'Reservación de establecimiento')
+        this.isLoading = false
+        this.isSubmitted = false
       }
     })
   }
