@@ -37,6 +37,7 @@ import { establishmentReservationGroupForm } from '../../forms';
 export class ReservationFormComponent implements OnInit {
 
   @Input({ required: true }) establishmentId!: string
+  @Input({ required: true }) establishmentPricePerHour!: number
   @Input() defaultValues: ReservationFormData | null = null
 
   private readonly _apiEstablishmentService = inject(ApiEstablishmentService)
@@ -106,6 +107,42 @@ export class ReservationFormComponent implements OnInit {
         })
       }
     })
+  }
+
+  calculateTotalHours(): number {
+    if (
+      !this.reservationForm.hasError('datetimeDifference') &&
+      !this.reservationForm.hasError('datetimesEquals') &&
+      this.realizationDate.valid &&
+      this.finishDate.valid &&
+      this.topicId.valid
+    ) {
+      const realizationDate = new Date(this.realizationDate.value!)
+      const finishDate = new Date(this.finishDate.value!)
+
+      return (finishDate.getTime() - realizationDate.getTime()) / (1000 * 60 * 60)
+    }
+
+    return 0
+  }
+
+  calculateTotalPrice(): number {
+    if (
+      !this.reservationForm.hasError('datetimeDifference') &&
+      !this.reservationForm.hasError('datetimesEquals') &&
+      this.realizationDate.valid &&
+      this.finishDate.valid &&
+      this.topicId.valid
+    ) {
+      const realizationDate = new Date(this.realizationDate.value!)
+      const finishDate = new Date(this.finishDate.value!)
+
+      const hours = (finishDate.getTime() - realizationDate.getTime()) / (1000 * 60 * 60)
+
+      return hours * this.establishmentPricePerHour
+    }
+
+    return 0
   }
 
   get realizationDate() {

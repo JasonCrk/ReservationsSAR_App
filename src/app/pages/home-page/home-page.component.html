@@ -16,5 +16,7 @@
     @for (establishment of availableEstablishments; track establishment.id) {
       <app-establishment-item [establishment]="establishment" />
     }
+  } @else {
+    Cargando...
   }
 </section>

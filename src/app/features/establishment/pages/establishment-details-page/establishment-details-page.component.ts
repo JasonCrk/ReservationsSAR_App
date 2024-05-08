@@ -19,7 +19,18 @@ import { ReservationFormComponent } from '../../../reservation/components/reserv
     NavbarComponent,
     ReservationFormComponent
   ],
-  templateUrl: './establishment-details-page.component.html'
+  templateUrl: './establishment-details-page.component.html',
+  styles: `
+    .establishment-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .establishment-image:nth-child(1) {
+      grid-row: 1 / 3;
+    }
+  `
 })
 export class EstablishmentDetailsPageComponent implements OnInit {
 
@@ -28,18 +39,16 @@ export class EstablishmentDetailsPageComponent implements OnInit {
 
   defaultValueReservationForm: ReservationFormData | null = null
 
-  establishment$ = this._apiEstablishmentService.getOne(
-    this.routeSnapshot.params['establishmentId']
-  ).pipe(
-    map(({ topics, ...res }) => {
+  establishment$ = this._apiEstablishmentService.getOne(this.routeSnapshot.params['establishmentId']).pipe(
+      map(({ topics, ...res }) => {
 
-      const topicsInLine = topics.reduce(
-        (prev, current) => prev + ' - ' + current.name, '')
-        .substring(3)
+        const topicsInLine = topics.reduce(
+          (prev, current) => prev + ' - ' + current.name, '')
+          .substring(3)
 
-      return { ...res, topics: topicsInLine }
-    })
-  )
+        return { ...res, topics: topicsInLine }
+      })
+    )
 
   ngOnInit(): void {
     const realizationDate = this.routeSnapshot.queryParams['realization'] ?? ''

@@ -84,6 +84,20 @@
   >
     Realizar reserva
   </button>
+
+  @if (
+    !reservationForm.hasError('datetimeDifference') &&
+    !reservationForm.hasError('datetimesEquals') &&
+    realizationDate.valid &&
+    finishDate.valid &&
+    topicId.valid
+  ) {
+    <p class="text-center pt-1 text-lg">
+      Total a pagar:
+      <span class="font-bold text-green-600">S/{{ calculateTotalPrice() }}</span>
+      por {{ calculateTotalHours() > 1 ? 'las {{ calculateTotalHours() }} horas de uso' : 'la hora de uso' }} del establecimiento
+    </p>
+  }
 </form>
 
 @if (checkoutClientSecret !== null && reservationData !== null) {
