@@ -43,6 +43,8 @@ export class StripeCheckoutFormComponent {
 
     document.getElementById('payment-form')!.addEventListener("submit", async e => {
       e.preventDefault()
+      if (this.isLoading) return
+
       this.isLoading = true
 
       const { error } = await this.stripe!.confirmPayment({

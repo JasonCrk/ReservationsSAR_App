@@ -2,7 +2,7 @@
   <div id="payment-element">
   </div>
 
-  <button id="submit" class="w-full py-2.5 text-white bg-green-600 rounded-md">
+  <button id="submit" [disabled]="isLoading" class="w-full disabled:opacity-50 disabled:cursor-wait py-2.5 text-white bg-green-600 rounded-md">
     <span id="button-text">Pagar ahora</span>
   </button>
 
